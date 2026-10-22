@@ -14,6 +14,7 @@ export default function EventPage({
 }) {
   const { id } = use(params);
   const event = useQuery(api.events.get, { id });
+  const sessions = useQuery(api.sessions.list, { eventId: id });
 
   if (event === undefined) {
     return (
@@ -25,7 +26,10 @@ export default function EventPage({
   if (!event) notFound();
 
   const rows = [
-    { label: "Sessions", value: event.sessions.length },
+    {
+      label: "Sessions",
+      value: sessions === undefined ? event.sessions.length : sessions.length,
+    },
     { label: "Start time", value: `${event.startDate} ${event.startTime}` },
   ];
 
@@ -43,6 +47,25 @@ export default function EventPage({
                 {row.label}
               </dt>
               <dd className="min-w-0 truncate">{row.value}</dd>
+            </div>
+          ))}
+          {sessions?.map((session) => (
+            <div key={session.id} className="flex gap-4 px-4 py-2.5">
+              <dt className="w-32 shrink-0 text-muted-foreground">
+                {session.name}
+              </dt>
+              <dd className="min-w-0 truncate">
+                {session.url ? (
+                  <a
+                    href={session.url}
+                    className="text-brand underline-offset-4 hover:underline"
+                  >
+                    {session.fileName}
+                  </a>
+                ) : (
+                  session.fileName
+                )}
+              </dd>
             </div>
           ))}
         </dl>
