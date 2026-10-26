@@ -8,9 +8,11 @@ export default convexAuthNextjsMiddleware(
     const isDashboard =
       pathname === "/dashboard" || pathname.startsWith("/dashboard/");
     const isAuth = pathname === "/auth" || pathname.startsWith("/auth/");
-    const allowed = authenticated
-      ? pathname === "/auth/sign-out" || isDashboard
-      : isAuth;
+    // The workbench is open to everyone; library sessions still need auth in Convex.
+    const isWorkbench = pathname.startsWith("/s/");
+    const allowed =
+      isWorkbench ||
+      (authenticated ? pathname === "/auth/sign-out" || isDashboard : isAuth);
 
     return allowed
       ? NextResponse.next()
