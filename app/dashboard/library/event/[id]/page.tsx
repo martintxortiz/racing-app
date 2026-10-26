@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "convex/react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { use } from "react";
 
@@ -66,6 +67,14 @@ export default function EventPage({
                   session.fileName
                 )}
               </dd>
+              {session.url && (
+                <Link
+                  href={`/s/${session.id}`}
+                  className="ml-auto shrink-0 text-brand underline-offset-4 hover:underline"
+                >
+                  Open in workbench
+                </Link>
+              )}
             </div>
           ))}
         </dl>
